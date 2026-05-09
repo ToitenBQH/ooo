@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% block title %}Khám phá dữ liệu — E-Nose{% endblock %}
+{% block page_title %}🔍 Khám phá dữ liệu{% endblock %}
+
+{% block content %}
+<!-- Filter bar -->
+<div class="card" style="padding:16px">
+  <div class="d-flex gap-12 align-center flex-wrap">
+    <div class="form-group" style="flex:1;min-width:180px">
+      <label class="form-label">Dự án</label>
+      <select id="ex-proj-select" class="form-control">
+        <option value="">-- Chọn dự án --</option>
+      </select>
+    </div>
+    <div class="form-group" style="flex:1;min-width:200px">
+      <label class="form-label">Phiên đo</label>
+      <select id="ex-sess-select" class="form-control">
+        <option value="">-- Chọn phiên đo --</option>
+      </select>
+    </div>
+    <div style="display:flex;align-items:flex-end;gap:8px;padding-bottom:1px">
+      <button id="btn-refresh" class="btn btn-ghost">🔄 Tải lại</button>
+      <button id="btn-export-csv" class="btn btn-success">⬇️ Xuất CSV</button>
+    </div>
+  </div>
+</div>
+
+<!-- Stats -->
+<div class="d-flex align-center gap-12">
+  <span class="fs-12 text-muted" id="total-rows">—</span>
+</div>
+
+<!-- Table -->
+<div class="card" style="padding:0;overflow:hidden">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Thời gian</th>
+          <th data-sensor-header>MQ-1</th>
+          <th data-sensor-header>MQ-2</th>
+          <th data-sensor-header>MQ-3</th>
+          <th data-sensor-header>MQ-4</th>
+          <th data-sensor-header>MQ-5</th>
+          <th data-sensor-header>MQ-6</th>
+          <th data-sensor-header>MQ-7</th>
+          <th>Nhiệt độ</th>
+          <th>Độ ẩm</th>
+          <th>Bơm</th>
+          <th>Van 1</th>
+          <th>Van 2</th>
+        </tr>
+      </thead>
+      <tbody id="data-tbody">
+        <tr><td colspan="14" style="text-align:center;padding:32px;color:var(--text-muted)">Chọn dự án và phiên đo để xem dữ liệu</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Pagination -->
+<div class="d-flex gap-8 align-center" id="pagination"></div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/data-explorer.js') }}"></script>
+{% endblock %}

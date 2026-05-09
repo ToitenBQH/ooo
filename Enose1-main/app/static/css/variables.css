@@ -1,0 +1,134 @@
+/* ============================================
+   E-Nose Design System — CSS Variables
+   ============================================ */
+:root {
+  /* Colors */
+  --primary:        #6366f1;
+  --primary-hover:  #4f46e5;
+  --primary-glow:   rgba(99, 102, 241, 0.25);
+  --success:        #10b981;
+  --success-glow:   rgba(16, 185, 129, 0.25);
+  --warning:        #f59e0b;
+  --warning-glow:   rgba(245, 158, 11, 0.25);
+  --danger:         #ef4444;
+  --danger-glow:    rgba(239, 68, 68, 0.25);
+  --info:           #38bdf8;
+
+  /* Backgrounds */
+  --bg-base:        #0b1120;
+  --bg-surface:     #131d30;
+  --bg-surface2:    #1a2640;
+  --bg-surface3:    #1e2d48;
+  --bg-border:      rgba(255,255,255,0.07);
+
+  /* Text */
+  --text-primary:   #e2e8f0;
+  --text-secondary: #94a3b8;
+  --text-muted:     #64748b;
+
+  /* Chart colors */
+  --c1: #6366f1; --c2: #10b981; --c3: #f59e0b;
+  --c4: #ef4444; --c5: #38bdf8; --c6: #a855f7;
+  --c7: #f97316;
+
+  /* Sizes */
+  --sidebar-w:    240px;
+  --topbar-h:     60px;
+  --radius:       12px;
+  --radius-sm:    8px;
+  --radius-lg:    16px;
+  --shadow:       0 4px 24px rgba(0,0,0,0.3);
+  --shadow-lg:    0 8px 40px rgba(0,0,0,0.4);
+  --transition:   0.2s ease;
+
+  /* Font */
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  font-family: var(--font);
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-size: 14px;
+  line-height: 1.6;
+  overflow: hidden;
+}
+
+a { color: var(--primary); text-decoration: none; }
+a:hover { color: var(--primary-hover); }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-surface2); }
+::-webkit-scrollbar-thumb { background: var(--bg-surface3); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+/* Utility */
+.text-primary   { color: var(--primary) !important; }
+.text-success   { color: var(--success) !important; }
+.text-warning   { color: var(--warning) !important; }
+.text-danger    { color: var(--danger) !important; }
+.text-muted     { color: var(--text-muted) !important; }
+.text-secondary { color: var(--text-secondary) !important; }
+
+.fw-500 { font-weight: 500; }
+.fw-600 { font-weight: 600; }
+.fw-700 { font-weight: 700; }
+
+.fs-12 { font-size:12px; } .fs-13 { font-size:13px; }
+.fs-18 { font-size:18px; } .fs-24 { font-size:24px; }
+.fs-32 { font-size:32px; }
+
+.d-flex    { display: flex; }
+.flex-col  { flex-direction: column; }
+.align-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.justify-center  { justify-content: center; }
+.gap-4  { gap: 4px;  } .gap-8  { gap: 8px; }
+.gap-12 { gap: 12px; } .gap-16 { gap: 16px; }
+.gap-24 { gap: 24px; }
+
+.mt-4  { margin-top: 4px; }  .mt-8  { margin-top: 8px; }
+.mt-12 { margin-top:12px; }  .mt-16 { margin-top:16px; }
+.mt-24 { margin-top:24px; }
+.mb-8  { margin-bottom:8px; } .mb-16 { margin-bottom:16px; }
+
+.w-100 { width:100%; } .h-100 { height:100%; }
+.hidden { display: none !important; }
+
+.badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 2px 10px; border-radius: 99px;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+.badge-success { background: rgba(16,185,129,0.15); color: var(--success); }
+.badge-warning { background: rgba(245,158,11,0.15); color: var(--warning); }
+.badge-danger  { background: rgba(239,68,68,0.15);  color: var(--danger); }
+.badge-primary { background: rgba(99,102,241,0.15); color: var(--primary); }
+.badge-muted   { background: var(--bg-surface3);    color: var(--text-muted); }
+
+.dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  display: inline-block;
+}
+.dot-success { background: var(--success); box-shadow: 0 0 6px var(--success); }
+.dot-danger  { background: var(--danger);  box-shadow: 0 0 6px var(--danger); }
+.dot-warning { background: var(--warning); }
+.dot-muted   { background: var(--text-muted); }
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity:1; } 50% { opacity:0.4; }
+}
+
+.spin { animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.fade-in { animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }

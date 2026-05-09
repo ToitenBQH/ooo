@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% block title %}Dự án — E-Nose{% endblock %}
+{% block page_title %}📁 Quản lý dự án{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <div class="page-title">Dự án</div>
+    <div class="page-subtitle">Quản lý và nhóm các phiên đo theo dự án</div>
+  </div>
+  <button class="btn btn-primary" onclick="openModal('modal-create-proj')">+ Tạo dự án</button>
+</div>
+
+<!-- Projects Grid -->
+<div id="projects-grid" class="grid-3">
+  <div class="empty-state" style="grid-column:1/-1">
+    <div class="empty-icon">📁</div>
+    <p>Chưa có dự án nào. Tạo dự án đầu tiên!</p>
+  </div>
+</div>
+
+<!-- Modal: Create Project -->
+<div class="modal-backdrop" id="modal-create-proj">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Tạo dự án mới</div>
+      <span class="modal-close" onclick="closeModal('modal-create-proj')">✕</span>
+    </div>
+    <div class="form-group mb-16">
+      <label class="form-label">Tên dự án</label>
+      <input id="proj-name-inp" class="form-control" type="text" placeholder="VD: Nhận dạng cà phê 2024">
+    </div>
+    <div class="form-group mb-16">
+      <label class="form-label">Mô tả (tuỳ chọn)</label>
+      <textarea id="proj-desc-inp" class="form-control" placeholder="Mô tả dự án..."></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-create-proj')">Huỷ</button>
+      <button class="btn btn-primary" id="btn-save-proj">Tạo dự án</button>
+    </div>
+  </div>
+</div>
+
+<style>
+.proj-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--bg-border);
+  border-radius: var(--radius);
+  padding: 20px;
+  display: flex; flex-direction: column; gap: 12px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.proj-card:hover { border-color: var(--primary); box-shadow: 0 0 20px var(--primary-glow); }
+.proj-actions { display:flex; gap:8px; margin-top:auto; }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+async function loadProjects() {
+  const projects = await API.get('/api/projects/');
+  const grid = document.getElementById('projects-grid');
+  if (!projects.length) {
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">📁</div><p>Chưa có dự án. Tạo dự án đầu tiên!</p></div>`;
+    return;
+  }
+  grid.innerHTML = projects.map(p => `
+    <div class="proj-card fade-in">
+      <div>
+        <div style="font-size:15px;font-weight:700">${p.name}</div>
+        <div class="fs-12 text-muted mt-4">${p.description || 'Không có mô tả'}</div>
+        <div class="fs-12 text-muted mt-4">📅 ${p.created_at?.slice(0,10) || ''}</div>
+      </div>
+      <div class="proj-actions">
+        <a href="/session?project_id=${p.id}" class="btn btn-primary btn-sm" style="flex:1">⏺ Ghi dữ liệu</a>
+        <a href="/data-explorer?project_id=${p.id}" class="btn btn-ghost btn-sm" style="flex:1">🔍 Xem data</a>
+        <button class="btn btn-ghost btn-sm btn-icon" onclick="deleteProject(${p.id}, '${p.name}')">🗑</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+async function deleteProject(id, name) {
+  if (!confirm(`Xoá dự án "${name}" và tất cả phiên đo? Thao tác không thể hoàn tác.`)) return;
+  await API.delete(`/api/projects/${id}`);
+  showToast('Đã xoá dự án', 'success');
+  loadProjects();
+}
+
+function openModal(id)  { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+document.getElementById('btn-save-proj').addEventListener('click', async () => {
+  const name = document.getElementById('proj-name-inp').value.trim();
+  const desc = document.getElementById('proj-desc-inp').value.trim();
+  if (!name) { showToast('Nhập tên dự án', 'warning'); return; }
+  await API.post('/api/projects/', { name, description: desc });
+  showToast('Đã tạo dự án', 'success');
+  closeModal('modal-create-proj');
+  document.getElementById('proj-name-inp').value = '';
+  document.getElementById('proj-desc-inp').value = '';
+  loadProjects();
+});
+
+document.addEventListener('DOMContentLoaded', loadProjects);
+</script>
+{% endblock %}

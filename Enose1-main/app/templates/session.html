@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% block title %}Ghi dữ liệu — E-Nose{% endblock %}
+{% block page_title %}⏺ Ghi dữ liệu{% endblock %}
+
+{% block content %}
+<div class="grid-2" style="grid-template-columns:300px 1fr;align-items:start">
+
+  <!-- LEFT PANEL: Project/Session Select -->
+  <div style="display:flex;flex-direction:column;gap:16px">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">📁 Dự án & Phiên đo</div>
+      </div>
+      <div class="form-group mb-16">
+        <label class="form-label">Dự án</label>
+        <select id="proj-select" class="form-control">
+          <option value="">-- Chọn dự án --</option>
+        </select>
+      </div>
+      <div style="max-height:220px;overflow-y:auto;display:flex;flex-direction:column;gap:4px" id="session-list">
+        <div class="empty-state" style="padding:24px">
+          <div class="empty-icon">📋</div>
+          <p>Chọn dự án để xem phiên đo</p>
+        </div>
+      </div>
+      <div style="margin-top:12px;border-top:1px solid var(--bg-border);padding-top:12px">
+        <div style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">Tạo phiên mới</div>
+        <div class="form-group" style="margin-bottom:8px">
+          <input id="new-sess-name" class="form-control" placeholder="Tên phiên" type="text">
+        </div>
+        <div class="form-group" style="margin-bottom:10px">
+          <input id="new-sess-label" class="form-control" placeholder="Nhãn mẫu (VD: Cà phê A)" type="text">
+        </div>
+        <button id="btn-create-sess" class="btn btn-primary w-100">+ Tạo phiên</button>
+      </div>
+    </div>
+
+    <!-- Recording controls -->
+    <div class="card">
+      <div class="card-title mb-16">Phiên đang chọn</div>
+      <div style="margin-bottom:8px">
+        <div class="fs-12 text-muted">Tên phiên</div>
+        <div class="fw-600" id="sess-name-display">—</div>
+      </div>
+      <div style="margin-bottom:8px">
+        <div class="fs-12 text-muted">Nhãn mẫu</div>
+        <div class="fs-12" id="sess-label-display">—</div>
+      </div>
+      <div style="margin-bottom:16px">
+        <div class="fs-12 text-muted">Trạng thái</div>
+        <span class="badge badge-muted" id="sess-status-badge">idle</span>
+      </div>
+      <div style="font-size:32px;font-weight:800;text-align:center;margin-bottom:12px;font-variant-numeric:tabular-nums;color:var(--primary)" id="rec-timer">00:00:00</div>
+      <div class="d-flex gap-8">
+        <button id="btn-start-rec" class="btn btn-success" style="flex:1" disabled>▶ Bắt đầu</button>
+        <button id="btn-stop-rec"  class="btn btn-danger"  style="flex:1" disabled>⏹ Dừng</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Live chart -->
+  <div class="chart-card" style="height:560px">
+    <div class="chart-card-header">
+      <div>
+        <div class="card-title">📈 Biểu đồ ghi phiên</div>
+        <div class="card-subtitle">Dữ liệu tích lũy trong phiên đo hiện tại</div>
+      </div>
+    </div>
+    <div class="chart-wrapper" style="flex:1;height:480px">
+      <canvas id="session-chart"></canvas>
+    </div>
+  </div>
+
+</div>
+
+<style>
+.session-row {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:10px 12px; border-radius:var(--radius-sm);
+  cursor:pointer; transition:background 0.15s;
+  border: 1px solid transparent;
+}
+.session-row:hover { background:var(--bg-surface2); border-color:var(--bg-border); }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/session.js') }}"></script>
+{% endblock %}

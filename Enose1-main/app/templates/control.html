@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% block title %}Điều khiển — E-Nose{% endblock %}
+{% block page_title %}🎛 Bảng điều khiển{% endblock %}
+
+{% block content %}
+<div class="grid-2" style="gap:20px">
+
+  <!-- VAN ĐIỆN TỪ -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">🔌 Van điện từ</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+
+      <div class="device-card" id="valve1-card">
+        <div class="device-card-info">
+          <div class="device-card-name" id="valve1-name">Van Khí Trơ</div>
+          <div class="device-card-status" id="valve1-label">ĐÓNG</div>
+        </div>
+        <div class="d-flex align-center gap-12">
+          <div class="toggle" id="valve1-toggle">
+            <div class="toggle-thumb"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="device-card" id="valve2-card">
+        <div class="device-card-info">
+          <div class="device-card-name" id="valve2-name">Van Buồng Mẫu</div>
+          <div class="device-card-status" id="valve2-label">ĐÓNG</div>
+        </div>
+        <div class="d-flex align-center gap-12">
+          <div class="toggle" id="valve2-toggle">
+            <div class="toggle-thumb"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- BƠM -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">🔄 Điều khiển bơm</div>
+      <span class="badge badge-muted" id="pump-name">Bơm</span>
+    </div>
+    <div class="slider-wrap">
+      <div class="slider-header">
+        <span class="form-label">Tốc độ</span>
+        <span><span class="slider-val" id="pump-val">0</span><span class="slider-unit"> %</span></span>
+      </div>
+      <input id="pump-slider" type="range" min="0" max="100" value="0">
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:16px">
+      <button class="btn btn-ghost btn-sm" onclick="document.getElementById('pump-slider').value=0;  document.getElementById('pump-val').textContent='0';  API.post('/api/device/pump',{speed:0})">0%</button>
+      <button class="btn btn-ghost btn-sm" onclick="document.getElementById('pump-slider').value=25; document.getElementById('pump-val').textContent='25'; API.post('/api/device/pump',{speed:64})">25%</button>
+      <button class="btn btn-ghost btn-sm" onclick="document.getElementById('pump-slider').value=50; document.getElementById('pump-val').textContent='50'; API.post('/api/device/pump',{speed:128})">50%</button>
+      <button class="btn btn-ghost btn-sm" onclick="document.getElementById('pump-slider').value=100;document.getElementById('pump-val').textContent='100';API.post('/api/device/pump',{speed:255})">100%</button>
+    </div>
+  </div>
+
+  <!-- LỆNH THỦ CÔNG -->
+  <div class="card" style="grid-column:1/-1">
+    <div class="card-header">
+      <div class="card-title">⌨️ Lệnh thủ công (Serial)</div>
+    </div>
+    <div class="d-flex gap-8 mb-16">
+      <input id="raw-cmd" class="form-control" type="text" placeholder="VD: VALVE1:ON  |  PUMP:150  |  VALVE2:OFF" style="font-family:monospace">
+      <button id="btn-send-raw" class="btn btn-primary">Gửi</button>
+    </div>
+    <div style="background:var(--bg-surface2);border-radius:var(--radius-sm);padding:14px;min-height:120px;max-height:200px;overflow-y:auto;font-family:monospace;font-size:12px" id="cmd-log">
+      <span class="text-muted">--- Lịch sử lệnh ---</span>
+    </div>
+  </div>
+
+</div>
+
+<style>
+.log-line { padding: 3px 0; border-bottom: 1px solid var(--bg-border); }
+.log-line:first-child { border-top: none; }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/control.js') }}"></script>
+{% endblock %}

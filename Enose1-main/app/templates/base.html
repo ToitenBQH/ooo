@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}E-Nose System{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/charts.css') }}">
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<div class="app-shell">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">🧪</div>
+      <span>E-Nose</span>
+    </div>
+
+    <div class="sidebar-section">Giám sát</div>
+    <a class="nav-item" href="/">
+      <span class="nav-icon">📊</span> Dashboard
+    </a>
+    <a class="nav-item" href="/session">
+      <span class="nav-icon">⏺</span> Ghi dữ liệu
+    </a>
+    <a class="nav-item" href="/data-explorer">
+      <span class="nav-icon">🔍</span> Khám phá dữ liệu
+    </a>
+
+    <div class="sidebar-section">Điều khiển</div>
+    <a class="nav-item" href="/control">
+      <span class="nav-icon">🎛</span> Bảng điều khiển
+    </a>
+    <a class="nav-item" href="/automation">
+      <span class="nav-icon">⚙️</span> Tự động hóa
+    </a>
+
+    <div class="sidebar-section">Quản lý</div>
+    <a class="nav-item" href="/projects">
+      <span class="nav-icon">📁</span> Dự án
+    </a>
+    <a class="nav-item" href="/settings">
+      <span class="nav-icon">🔧</span> Cài đặt
+    </a>
+
+    <div class="sidebar-bottom">
+      <div class="connection-indicator">
+        <span class="dot dot-danger" data-com-status="disconnected"></span>
+        <span style="flex:1">
+          <div style="font-weight:600;font-size:12px">Serial</div>
+          <div class="fs-12" data-com-label style="color:var(--danger)">Chưa kết nối</div>
+        </span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <span class="topbar-title">{% block page_title %}Dashboard{% endblock %}</span>
+    <div class="topbar-right">
+      <span class="topbar-time" id="topbar-time"></span>
+      <a href="/settings" class="btn btn-ghost btn-sm">⚙️ Cài đặt</a>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="main-content">
+    {% block content %}{% endblock %}
+  </main>
+</div>
+
+<!-- TOAST -->
+<div id="toast-container"></div>
+
+<!-- Vendor JS -->
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+
+<!-- App JS -->
+<script src="{{ url_for('static', filename='js/api.js') }}"></script>
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+<script src="{{ url_for('static', filename='js/charts.js') }}"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

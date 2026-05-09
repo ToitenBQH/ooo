@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>E-Nose — Cài đặt ban đầu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
+</head>
+<body>
+<div class="wizard-page">
+  <div class="wizard-container fade-in">
+
+    <!-- Logo -->
+    <div class="d-flex align-center gap-12" style="margin-bottom:24px;justify-content:center">
+      <div class="logo-icon" style="width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#6366f1,#a855f7);display:flex;align-items:center;justify-content:center;font-size:24px">🧪</div>
+      <div>
+        <div style="font-size:22px;font-weight:800;letter-spacing:-0.5px">E-Nose System</div>
+        <div class="fs-12 text-muted">Thiết lập ban đầu</div>
+      </div>
+    </div>
+
+    <!-- Step dots -->
+    <div class="wizard-steps">
+      <div class="wizard-step-dot active"></div>
+      <div class="wizard-step-dot"></div>
+      <div class="wizard-step-dot"></div>
+    </div>
+
+    <!-- STEP 1: COM PORT -->
+    <div id="wizard-step-1" class="wizard-pane">
+      <div class="card" style="padding:28px">
+        <div style="font-size:18px;font-weight:700;margin-bottom:4px">🔌 Kết nối Serial</div>
+        <p class="text-muted fs-12 mb-16">Chọn cổng COM mà ESP32 đang kết nối với máy tính</p>
+
+        <div class="form-group mb-16">
+          <label class="form-label">Cổng COM</label>
+          <div class="d-flex gap-8">
+            <select id="com-port-sel" class="form-control">
+              <option value="">Đang quét…</option>
+            </select>
+            <button id="btn-scan-ports" class="btn btn-ghost">🔄</button>
+          </div>
+        </div>
+
+        <div class="form-group mb-16">
+          <label class="form-label">Baud Rate</label>
+          <select id="baud-select" class="form-control">
+            <option value="9600">9600</option>
+            <option value="57600">57600</option>
+            <option value="115200" selected>115200</option>
+            <option value="230400">230400</option>
+          </select>
+        </div>
+
+        <div id="connect-status" style="min-height:28px;margin-bottom:12px"></div>
+
+        <div class="d-flex gap-8" style="justify-content:flex-end">
+          <button id="btn-connect" class="btn btn-primary">Kết nối & Test</button>
+          <button id="btn-next-1" class="btn btn-success" disabled>Tiếp theo →</button>
+        </div>
+
+        <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--bg-border)">
+          <button id="btn-skip-setup" class="btn btn-ghost btn-sm w-100">Bỏ qua (sẽ cấu hình sau)</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2: NAME SENSORS -->
+    <div id="wizard-step-2" class="wizard-pane hidden">
+      <div class="card" style="padding:28px">
+        <div style="font-size:18px;font-weight:700;margin-bottom:4px">🏷️ Đặt tên thiết bị</div>
+        <p class="text-muted fs-12 mb-16">Nhập tên hiển thị cho các cảm biến và cơ cấu chấp hành</p>
+
+        <div style="font-size:13px;font-weight:700;color:var(--text-secondary);margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px">7 Cảm biến khí MOS</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px">
+          {% for i in range(1, 8) %}
+          <div class="form-group">
+            <label class="form-label">Cảm biến {{ i }}</label>
+            <input id="sensor{{ i }}-name" class="form-control" type="text" value="MQ-{{ [2,3,4,5,6,8,135][i-1] }}" placeholder="MQ-?">
+          </div>
+          {% endfor %}
+        </div>
+
+        <div style="font-size:13px;font-weight:700;color:var(--text-secondary);margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px">Van điện từ & Bơm</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:20px">
+          <div class="form-group">
+            <label class="form-label">Van 1</label>
+            <input id="valve1-name-inp" class="form-control" type="text" value="Van Khí Trơ">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Van 2</label>
+            <input id="valve2-name-inp" class="form-control" type="text" value="Van Buồng Mẫu">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Bơm</label>
+            <input id="pump-name-inp" class="form-control" type="text" value="Bơm Mẫu">
+          </div>
+        </div>
+
+        <div class="d-flex gap-8" style="justify-content:space-between">
+          <button id="btn-back-2" class="btn btn-ghost">← Quay lại</button>
+          <button id="btn-next-2" class="btn btn-primary">Lưu & Tiếp →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 3: MANUAL TEST -->
+    <div id="wizard-step-3" class="wizard-pane hidden">
+      <div class="card" style="padding:28px">
+        <div style="font-size:18px;font-weight:700;margin-bottom:4px">🧪 Kiểm tra thiết bị</div>
+        <p class="text-muted fs-12 mb-16">Thử bật/tắt van và bơm, quan sát dữ liệu cảm biến live</p>
+
+        <!-- Sensor live preview -->
+        <div style="margin-bottom:20px">
+          <div class="fs-12 fw-700 text-secondary" style="text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">📡 Dữ liệu cảm biến live</div>
+          <div style="background:var(--bg-surface2);border-radius:var(--radius-sm);overflow:hidden">
+            <table style="width:100%">
+              <tbody id="test-sensor-tbody">
+                <tr><td colspan="2" style="text-align:center;padding:16px;color:var(--text-muted)">Chờ dữ liệu từ ESP32…</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Valve controls -->
+        <div class="d-flex gap-8 mb-16">
+          <button id="test-valve1-btn" class="btn btn-ghost" data-state="off" style="flex:1">⚫ Van 1: ĐÓNG</button>
+          <button id="test-valve2-btn" class="btn btn-ghost" data-state="off" style="flex:1">⚫ Van 2: ĐÓNG</button>
+        </div>
+
+        <!-- Pump slider -->
+        <div class="slider-wrap mb-16">
+          <div class="slider-header">
+            <span class="form-label">🔄 Tốc độ bơm</span>
+            <span><span id="test-pump-val" class="slider-val">0</span><span class="slider-unit">%</span></span>
+          </div>
+          <input id="test-pump-slider" type="range" min="0" max="100" value="0">
+        </div>
+
+        <div class="d-flex gap-8" style="justify-content:space-between">
+          <button id="btn-back-3" class="btn btn-ghost">← Quay lại</button>
+          <button id="btn-finish-setup" class="btn btn-success btn-lg">✅ Hoàn tất cài đặt</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+<script src="{{ url_for('static', filename='js/api.js') }}"></script>
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+<script src="{{ url_for('static', filename='js/setup.js') }}"></script>
+</body>
+</html>

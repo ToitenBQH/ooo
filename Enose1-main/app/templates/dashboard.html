@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard — E-Nose{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+<!-- Status Bar -->
+<div class="d-flex gap-12 align-center">
+  <div class="stat-card" style="flex:1;flex-direction:row;align-items:center;gap:16px">
+    <div class="stat-icon stat-icon-primary">📡</div>
+    <div>
+      <div class="stat-label">Trạng thái Serial</div>
+      <div class="d-flex align-center gap-8 mt-4">
+        <span class="dot dot-danger" data-com-status="disconnected"></span>
+        <span class="fw-600" data-com-label style="color:var(--danger)">Chưa kết nối</span>
+      </div>
+    </div>
+  </div>
+  <div class="stat-card" style="flex:1;flex-direction:row;align-items:center;gap:16px">
+    <div class="stat-icon stat-icon-success">🌡️</div>
+    <div>
+      <div class="stat-label">Nhiệt độ</div>
+      <div class="d-flex align-center gap-4 mt-4">
+        <span class="fw-700 fs-18" id="val-temp">--</span>
+        <span class="text-muted fs-12">°C</span>
+      </div>
+    </div>
+  </div>
+  <div class="stat-card" style="flex:1;flex-direction:row;align-items:center;gap:16px">
+    <div class="stat-icon stat-icon-info">💧</div>
+    <div>
+      <div class="stat-label">Độ ẩm</div>
+      <div class="d-flex align-center gap-4 mt-4">
+        <span class="fw-700 fs-18" id="val-hum">--</span>
+        <span class="text-muted fs-12">%</span>
+      </div>
+    </div>
+  </div>
+  <div class="stat-card" style="flex:1;flex-direction:row;align-items:center;gap:16px">
+    <div class="stat-icon stat-icon-warning">🎛</div>
+    <div>
+      <div class="stat-label">Trạng thái Van</div>
+      <div class="d-flex gap-8 mt-4">
+        <span class="fs-12 fw-500" id="dash-v1">--</span>
+        <span class="text-muted">|</span>
+        <span class="fs-12 fw-500" id="dash-v2">--</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Sensor Cards -->
+<div>
+  <div class="page-header mb-16" style="margin-bottom:12px">
+    <div class="page-title" style="font-size:16px">🔬 Cảm biến khí MOS</div>
+  </div>
+  <div class="grid-4">
+    {% set colors = ['#6366f1','#10b981','#f59e0b','#ef4444','#38bdf8','#a855f7','#f97316'] %}
+    {% set defaults = ['MQ-2','MQ-3','MQ-4','MQ-5','MQ-6','MQ-8','MQ-135'] %}
+    {% for i in range(7) %}
+    <div class="sensor-card" id="sensor-card-{{ i }}" style="--sensor-color:{{ colors[i] }}">
+      <div class="sensor-label" id="sensor-card-label-{{ i }}">{{ defaults[i] }}</div>
+      <div>
+        <span class="sensor-value">--</span>
+        <span class="sensor-unit">ADC</span>
+      </div>
+      <div class="sensor-bar">
+        <div class="sensor-bar-fill" style="width:0%"></div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- Charts -->
+<div class="grid-2" style="grid-template-columns:2fr 1fr">
+  <!-- Line chart -->
+  <div class="chart-card">
+    <div class="chart-card-header">
+      <div>
+        <div class="card-title">📈 Dữ liệu real-time (60s)</div>
+        <div class="card-subtitle">Cập nhật liên tục</div>
+      </div>
+    </div>
+    <div class="chart-wrapper" style="height:240px">
+      <canvas id="dash-line-chart"></canvas>
+    </div>
+    <div class="chart-legend" id="dash-legend"></div>
+  </div>
+  <!-- Radar chart -->
+  <div class="chart-card">
+    <div class="chart-card-header">
+      <div class="card-title">🕸 Radar tức thời</div>
+    </div>
+    <div class="radar-wrap" style="height:260px">
+      <canvas id="dash-radar-chart"></canvas>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+<script>
+// Update sensor card labels from settings
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => {
+    const s = window.App.settings;
+    for (let i = 1; i <= 7; i++) {
+      const el = document.getElementById(`sensor-card-label-${i-1}`);
+      if (el && s[`sensor${i}_name`]) el.textContent = s[`sensor${i}_name`];
+    }
+  }, 400);
+});
+</script>
+{% endblock %}
